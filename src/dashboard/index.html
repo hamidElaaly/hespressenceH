@@ -1,0 +1,110 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hespressence</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Arabic:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            font-family: "Noto Sans Arabic", serif;
+        }
+
+        body {
+            background-color: #f4f7f6;
+            color: #333;
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #6366f1 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .chart-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(31, 38, 135, 0.1);
+        }
+
+        .chart-title {
+            direction: rtl !important;
+        }
+
+        .tooltip {
+            position: absolute;
+            visibility: hidden;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            pointer-events: none;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body class="p-6 bg-gray-50">
+    <div class="container mx-auto max-w-7xl">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold gradient-text mb-3">Hespressence</h1>
+        </header>
+
+        <div id="error-container" class="hidden mb-6"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Trending Words Card -->
+            <div class="chart-card p-6">
+                <div class="flex items-center justify-between mb-5 chart-title">
+                    <h2 class="text-xl font-semibold text-gray-800">أهم المواضيع المتداولة</h2>
+                    <span class="text-sm text-gray-500">آخر 24 ساعة</span>
+                </div>
+                <div class="relative overflow-x-auto">
+                    <table class="w-full text-sm text-left">
+                        <thead class="text-xs text-gray-500 uppercase border-b">
+                            <tr>
+                                <th class="py-3 text-center">معدل التفاعل</th>
+                                <th class="py-3 text-center">عدد الذكر</th>
+                                <th class="py-3 text-right">الموضوع</th>
+                            </tr>
+                        </thead>
+                        <tbody id="trending-table" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Scatter Plot Card -->
+            <div class="chart-card p-6 lg:col-span-2">
+                <div class="flex items-center justify-between mb-5 chart-title">
+                    <h2 class="text-xl font-semibold text-gray-800 text-center">توزيع المواضيع حسب التفاعل</h2>
+                </div>
+                <svg id="scatter-plot" class="w-full h-96"></svg>
+            </div>
+
+            <!-- Pie Chart Card -->
+            <div class="chart-card p-6">
+                <h2 class="text-xl font-semibold text-gray-800 mb-5 text-center">توزيع المشاعر</h2>
+                <svg id="pie-chart" class="w-full h-80"></svg>
+            </div>
+
+            <!-- Bar Chart Card -->
+            <div class="chart-card p-6 lg:col-span-2">
+                <h2 class="text-xl font-semibold text-gray-800 mb-5 chart-title text-center">أهم 5 مواضيع تم مناقشتها</h2>
+                <svg id="bar-chart" class="w-full h-80"></svg>
+            </div>
+        </div>
+    </div>
+    <script src="/visualization"></script>
+</body>
+</html>
